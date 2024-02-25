@@ -14,7 +14,7 @@ export default function CurrencyInput({ onChange }) {
   const getValue = () => {
     let value =
       integerPart === "" ? 0 : Number.parseInt(clearNumber(integerPart));
-    value += decimalPart === "" ? 0 : Number.parseInt(decimalPart()) / 10;
+    value += decimalPart === "" ? 0 : Number.parseInt(decimalPart.padEnd(2,"0")) / 100;
     return value;
   };
 

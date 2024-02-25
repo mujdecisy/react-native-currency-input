@@ -14,7 +14,9 @@ export default function App() {
       style={{ borderWidth: 1, borderColor: "black", height: "100vh" }}
     >
       <View style={styles.container}>
-        <CurrencyInput />
+        <CurrencyInput onChange={(e)=>{
+          console.log("new value appeared : ", e)
+        }}/>
         <StatusBar style="auto" />
       </View>
     </TouchableWithoutFeedback>
