@@ -1,12 +1,22 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 
-export default function CurrencyInput() {
-
+export default function CurrencyInput({ onChange }) {
   const [integerPart, setIntegerPart] = useState("");
   const [decimalPart, setDecimalPart] = useState("");
   const integerRef = useRef(null);
   const decimalRef = useRef(null);
+
+  useEffect(() => {
+    onChange(getValue());
+  }, [integerPart, decimalPart]);
+
+  const getValue = () => {
+    let value =
+      integerPart === "" ? 0 : Number.parseInt(clearNumber(integerPart));
+    value += decimalPart === "" ? 0 : Number.parseInt(decimalPart()) / 10;
+    return value;
+  };
 
   return (
     <View
@@ -28,8 +38,7 @@ export default function CurrencyInput() {
             }
             decimalRef.current.focus();
           } else {
-            const newNumber = e.replaceAll(",", "").replaceAll(".", "");
-            setIntegerPart(addDots(removeLeadingZeros(newNumber)));
+            setIntegerPart(addDots(removeLeadingZeros(clearNumber(e))));
           }
         }}
         onBlur={() => {
@@ -47,14 +56,17 @@ export default function CurrencyInput() {
         style={{ width: 50, borderColor: "black", borderWidth: 1 }}
         keyboardType="numeric"
         value={decimalPart}
-        onChangeText={(e) => {
-          if (e.length > 2) {
-            return;
-          }
-          if (e.length === 0 && decimalPart.length === 1) {
+        onKeyPress={(e) => {
+          if (e.nativeEvent.key === "Backspace" && decimalPart.length === 0) {
             integerRef.current.focus();
           }
-          setDecimalPart(e);
+        }}
+        onChangeText={(e) => {
+          const value = clearNumber(e);
+          if (value.length > 2) {
+            return;
+          }
+          setDecimalPart(value);
         }}
         onBlur={() => {
           if (decimalPart === "") {
@@ -66,11 +78,15 @@ export default function CurrencyInput() {
   );
 }
 
+function clearNumber(dirtyNumericString) {
+  return dirtyNumericString.replaceAll(",", "").replaceAll(".", "");
+}
+
 function removeLeadingZeros(numericString) {
-    while (numericString.length>0 && numericString[0] === "0"){
-        numericString = numericString.slice(1,numericString.length-1);
-    }
-    return numericString;
+  while (numericString.length > 0 && numericString[0] === "0") {
+    numericString = numericString.slice(1, numericString.length - 1);
+  }
+  return numericString;
 }
 
 function addDots(numericString) {
