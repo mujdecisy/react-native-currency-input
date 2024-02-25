@@ -1,22 +1,30 @@
 import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 
-export default function CurrencyInput({ onChange }) {
+export default function CurrencyInput({ onChange, initialValue }) {
   const [integerPart, setIntegerPart] = useState("");
   const [decimalPart, setDecimalPart] = useState("");
   const integerRef = useRef(null);
   const decimalRef = useRef(null);
 
   useEffect(() => {
-    onChange(getValue());
-  }, [integerPart, decimalPart]);
+    if (initialValue) {
+        const initIntegerPart = Math.floor(initialValue);
+        const initDecimalPart = Math.floor((initialValue - initIntegerPart) * 100);
+        setIntegerPart(addDots(initIntegerPart.toString()));
+        setDecimalPart(initDecimalPart.toString().padEnd(2, "0"));
+    }
+  }, []);
 
-  const getValue = () => {
+  useEffect(() => {
     let value =
       integerPart === "" ? 0 : Number.parseInt(clearNumber(integerPart));
-    value += decimalPart === "" ? 0 : Number.parseInt(decimalPart.padEnd(2,"0")) / 100;
-    return value;
-  };
+    value +=
+      decimalPart === ""
+        ? 0
+        : Number.parseInt(decimalPart.padEnd(2, "0")) / 100;
+    onChange(value);
+  }, [integerPart, decimalPart]);
 
   return (
     <View
@@ -40,6 +48,11 @@ export default function CurrencyInput({ onChange }) {
           } else {
             setIntegerPart(addDots(removeLeadingZeros(clearNumber(e))));
           }
+        }}
+        onFocus={()=>{
+            if (integerPart === "0") {
+                setIntegerPart("");
+            }
         }}
         onBlur={() => {
           if (integerPart === "") {
@@ -68,9 +81,16 @@ export default function CurrencyInput({ onChange }) {
           }
           setDecimalPart(value);
         }}
+        onFocus={()=>{
+            if (decimalPart === "00") {
+                setDecimalPart("");
+            }
+        }}
         onBlur={() => {
           if (decimalPart === "") {
             setDecimalPart("00");
+          } else {
+            setDecimalPart(decimalPart.padEnd(2,"0"));
           }
         }}
       />

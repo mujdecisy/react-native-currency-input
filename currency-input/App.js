@@ -3,7 +3,7 @@ import {
   Keyboard,
   StyleSheet,
   TouchableWithoutFeedback,
-  View
+  View,
 } from "react-native";
 import CurrencyInput from "./CurrencyInput";
 
@@ -14,9 +14,12 @@ export default function App() {
       style={{ borderWidth: 1, borderColor: "black", height: "100vh" }}
     >
       <View style={styles.container}>
-        <CurrencyInput onChange={(e)=>{
-          console.log("new value appeared : ", e)
-        }}/>
+        <CurrencyInput
+          onChange={(e) => {
+            console.log("new value appeared : ", e);
+          }}
+          initialValue={22224.25}
+        />
         <StatusBar style="auto" />
       </View>
     </TouchableWithoutFeedback>
