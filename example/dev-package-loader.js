@@ -28,5 +28,4 @@ const watcher = chokidar.watch(folderToWatch, {
 watcher
     .on('add', copyPackageSource)
     .on('change', copyPackageSource)
-    .on('unlink', copyPackageSource)
 

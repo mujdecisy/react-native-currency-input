@@ -66,7 +66,7 @@ export default function CurrencyInput({ onChange, initialValue }) {
 
       <TextInput
         ref={decimalRef}
-        style={{ width: 50, borderColor: "black", borderWidth: 1 }}
+        style={{ width: 50, borderColor: "red", borderWidth: 1 }}
         keyboardType="numeric"
         value={decimalPart}
         onKeyPress={(e) => {
