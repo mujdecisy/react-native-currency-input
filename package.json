@@ -1,0 +1,12 @@
+{
+  "name": "react-native-decimal-input",
+  "version": "0.0.1",
+  "source" : "src/index.js",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-native": "^0.73.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0"
+  }
+}
