@@ -5,15 +5,18 @@ import PropTypes from "prop-types";
 function CurrencyInput({ onChange, initialValue }) {
   const [integerPart, setIntegerPart] = useState("");
   const [decimalPart, setDecimalPart] = useState("");
+  const [cursorAtStartOfDecimal, setCursorAtStartOfDecimal] = useState(false);
   const integerRef = useRef(null);
   const decimalRef = useRef(null);
 
   useEffect(() => {
     if (initialValue) {
-        const initIntegerPart = Math.floor(initialValue);
-        const initDecimalPart = Math.floor((initialValue - initIntegerPart) * 100);
-        setIntegerPart(addDots(initIntegerPart.toString()));
-        setDecimalPart(initDecimalPart.toString().padEnd(2, "0"));
+      const initIntegerPart = Math.floor(initialValue);
+      const initDecimalPart = Math.floor(
+        (initialValue - initIntegerPart) * 100
+      );
+      setIntegerPart(addDots(initIntegerPart.toString()));
+      setDecimalPart(initDecimalPart.toString().padEnd(2, "0"));
     }
   }, []);
 
@@ -51,10 +54,10 @@ function CurrencyInput({ onChange, initialValue }) {
             setIntegerPart(addDots(removeLeadingZeros(clearNumber(e))));
           }
         }}
-        onFocus={()=>{
-            if (integerPart === "0") {
-                setIntegerPart("");
-            }
+        onFocus={() => {
+          if (integerPart === "0") {
+            setIntegerPart("");
+          }
         }}
         onBlur={() => {
           if (integerPart === "") {
@@ -72,8 +75,14 @@ function CurrencyInput({ onChange, initialValue }) {
         style={{ width: 50, borderColor: "red", borderWidth: 1 }}
         keyboardType="numeric"
         value={decimalPart}
+        onSelectionChange={(e) => {
+          setCursorAtStartOfDecimal(
+            e.nativeEvent.selection.start === 0 &&
+              e.nativeEvent.selection.end === 0
+          );
+        }}
         onKeyPress={(e) => {
-          if (e.nativeEvent.key === "Backspace" && decimalPart.length === 0) {
+          if (e.nativeEvent.key === "Backspace" && cursorAtStartOfDecimal) {
             integerRef.current.focus();
           }
         }}
@@ -84,16 +93,16 @@ function CurrencyInput({ onChange, initialValue }) {
           }
           setDecimalPart(value);
         }}
-        onFocus={()=>{
-            if (decimalPart === "00") {
-                setDecimalPart("");
-            }
+        onFocus={() => {
+          if (decimalPart === "00") {
+            setDecimalPart("");
+          }
         }}
         onBlur={() => {
           if (decimalPart === "") {
             setDecimalPart("00");
           } else {
-            setDecimalPart(decimalPart.padEnd(2,"0"));
+            setDecimalPart(decimalPart.padEnd(2, "0"));
           }
         }}
       />
@@ -104,7 +113,7 @@ function CurrencyInput({ onChange, initialValue }) {
 CurrencyInput.propTypes = {
   onChange: PropTypes.func.isRequired,
   initialValue: PropTypes.number.isRequired,
-}
+};
 
 function clearNumber(dirtyNumericString) {
   return dirtyNumericString.replaceAll(",", "").replaceAll(".", "");
@@ -128,6 +137,5 @@ function addDots(numericString) {
   }
   return result.join("");
 }
-
 
 export default CurrencyInput;
