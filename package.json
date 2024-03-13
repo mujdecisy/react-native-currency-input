@@ -9,5 +9,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
-  }
+  },
+  "author": "mujdecisy <mujdecisy@gmail.com> (https://github.com/mujdecisy)",
+  "license": "MIT",
+  "homepage": "https://github.com/mujdecisy/react-native-decimal-input#readme"
 }
