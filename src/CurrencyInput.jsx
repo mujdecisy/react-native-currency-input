@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native";
+import PropTypes from "prop-types";
 
-export default function CurrencyInput({ onChange, initialValue }) {
+function CurrencyInput({ onChange, initialValue }) {
   const [integerPart, setIntegerPart] = useState("");
   const [decimalPart, setDecimalPart] = useState("");
   const integerRef = useRef(null);
@@ -30,6 +31,7 @@ export default function CurrencyInput({ onChange, initialValue }) {
     <View
       style={{ display: "flex", flexDirection: "row", paddingHorizontal: 5 }}
     >
+      {/* ----------------------------------------------------- INTEGER PART */}
       <TextInput
         ref={integerRef}
         style={{
@@ -40,7 +42,7 @@ export default function CurrencyInput({ onChange, initialValue }) {
         }}
         value={integerPart}
         onChangeText={(e) => {
-          if (e[e.length - 1] === ",") {
+          if (e.includes(",")) {
             if (integerPart === "") {
               setIntegerPart("0");
             }
@@ -64,6 +66,7 @@ export default function CurrencyInput({ onChange, initialValue }) {
 
       <Text style={{ marginHorizontal: 5 }}>,</Text>
 
+      {/* ----------------------------------------------------- DECIMAL PART */}
       <TextInput
         ref={decimalRef}
         style={{ width: 50, borderColor: "red", borderWidth: 1 }}
@@ -98,6 +101,11 @@ export default function CurrencyInput({ onChange, initialValue }) {
   );
 }
 
+CurrencyInput.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  initialValue: PropTypes.number.isRequired,
+}
+
 function clearNumber(dirtyNumericString) {
   return dirtyNumericString.replaceAll(",", "").replaceAll(".", "");
 }
@@ -120,3 +128,6 @@ function addDots(numericString) {
   }
   return result.join("");
 }
+
+
+export default CurrencyInput;

@@ -1,8 +1,9 @@
 {
   "name": "react-native-decimal-input",
   "version": "0.0.1",
-  "source" : "src/index.js",
+  "source": "src/index.js",
   "dependencies": {
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-native": "^0.73.4"
   },
