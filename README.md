@@ -63,7 +63,7 @@ default:
     {
         flex: 1,
         textAlign: "right",
-        fontSize: defaultFontSize,
+        fontSize: 20,
     }
 ```
 
@@ -74,7 +74,7 @@ Write styling dictionary for the seperator text.
 default:
     {
         marginHorizontal: 5,
-        fontSize: defaultFontSize
+        fontSize: 20
     }
 ```
 
@@ -85,6 +85,6 @@ Write styling dictionary for the decimal part of input.
 default:
     {
         width: 50,
-        fontSize: defaultFontSize
+        fontSize: 20
     }
 ```
