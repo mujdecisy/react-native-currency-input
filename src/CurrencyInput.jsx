@@ -51,7 +51,8 @@ function CurrencyInput({ onChange, initialValue }) {
             }
             decimalRef.current.focus();
           } else {
-            setIntegerPart(addDots(removeLeadingZeros(clearNumber(e))));
+            const checkedE = checkIfIntegerSeperatorDeleted(e, integerPart);
+            setIntegerPart(addDots(removeLeadingZeros(clearNumber(checkedE))));
           }
         }}
         onFocus={() => {
@@ -136,6 +137,25 @@ function addDots(numericString) {
     }
   }
   return result.join("");
+}
+
+function checkIfIntegerSeperatorDeleted(newIntegerPart, integerPart) {
+  resultVal = newIntegerPart;
+  if (newIntegerPart.length < integerPart.length) {
+    let i = newIntegerPart.length - 1;
+    let j = integerPart.length - 1;
+    while (newIntegerPart[i] === integerPart[j]) {
+      i--;
+      j--;
+    }
+
+    if (integerPart[j] === ".") {
+      resultVal =
+        newIntegerPart.slice(0, i) +
+        newIntegerPart.slice(i + 1, newIntegerPart.length);
+    }
+  }
+  return resultVal;
 }
 
 export default CurrencyInput;
