@@ -55,7 +55,7 @@ function controlSeperators(seperatorInteger, seperatorDecimal) {
   }
 }
 
-const defaultFontSize = 23;
+const defaultFontSize = 20;
 
 const styles = {
   container: {
