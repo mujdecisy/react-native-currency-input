@@ -52,11 +52,11 @@ function DecimalInput(props) {
   }, [integerPart, decimalPart]);
 
   return (
-    <View style={styles.containerStyle}>
+    <View style={props.styleContainer}>
       {/* ----------------------------------------------------- INTEGER PART */}
       <TextInput
         ref={integerRef}
-        style={styles.integerTextInputStyle}
+        style={props.styleIntegerTextInput}
         value={integerPart}
         onChangeText={(e) => {
           // keep comma hardcoded for jumping decimal point
@@ -98,12 +98,12 @@ function DecimalInput(props) {
         keyboardType="numeric"
       />
 
-      <Text style={styles.seperatorTextStyle}>{props.seperatorDecimal}</Text>
+      <Text style={props.styleSeperatorText}>{props.seperatorDecimal}</Text>
 
       {/* ----------------------------------------------------- DECIMAL PART */}
       <TextInput
         ref={decimalRef}
-        style={styles.decimalTextInputStyle}
+        style={props.styleDecimalTextInput}
         keyboardType="numeric"
         value={decimalPart}
         onSelectionChange={(e) => {
@@ -150,6 +150,10 @@ DecimalInput.propTypes = {
   initialValue: PropTypes.number,
   seperatorInteger: PropTypes.string,
   seperatorDecimal: PropTypes.string,
+  styleContainer: PropTypes.object,
+  styleIntegerTextInput: PropTypes.object,
+  styleSeperatorText: PropTypes.object,
+  styleDecimalTextInput: PropTypes.object,
 };
 
 DecimalInput.defaultProps = {
@@ -159,6 +163,10 @@ DecimalInput.defaultProps = {
   initialValue: 0,
   seperatorInteger: ".",
   seperatorDecimal: ",",
+  styleContainer: styles.container,
+  styleIntegerTextInput: styles.integerTextInput,
+  styleSeperatorText: styles.seperatorText,
+  styleDecimalTextInput: styles.decimalTextInput,
 };
 
 export default DecimalInput;

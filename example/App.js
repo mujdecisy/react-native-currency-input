@@ -1,5 +1,5 @@
 import { StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
-import DecimalInput from "./lib/src/DecimalInput";
+import DecimalInput from "./lib/src/index";
 
 export default function App() {
   return (
@@ -8,7 +8,7 @@ export default function App() {
       style={{ borderWidth: 1, borderColor: "black", height: "100vh" }}
     >
       <View style={styles.container}>
-        <DecimalInput/>
+        <DecimalInput />
       </View>
     </TouchableWithoutFeedback>
   );

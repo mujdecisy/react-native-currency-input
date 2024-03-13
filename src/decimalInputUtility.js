@@ -58,7 +58,7 @@ function controlSeperators(seperatorInteger, seperatorDecimal) {
 const defaultFontSize = 23;
 
 const styles = {
-  containerStyle: {
+  container: {
     display: "flex",
     flexDirection: "row",
     paddingHorizontal: 2,
@@ -67,13 +67,13 @@ const styles = {
     borderWidth: 1,
     borderRadius: 5
   },
-  integerTextInputStyle: {
+  integerTextInput: {
     flex: 1,
     textAlign: "right",
     fontSize: defaultFontSize,
   },
-  seperatorTextStyle: { marginHorizontal: 5, fontSize: defaultFontSize },
-  decimalTextInputStyle: { width: 50, fontSize: defaultFontSize },
+  seperatorText: { marginHorizontal: 5, fontSize: defaultFontSize },
+  decimalTextInput: { width: 50, fontSize: defaultFontSize },
 };
 
 export {
