@@ -1,5 +1,5 @@
 import { StyleSheet, View, TouchableWithoutFeedback, Keyboard } from "react-native";
-import CurrencyInput from "./react-native-decimal-input";
+import DecimalInput from "./lib/src/DecimalInput";
 
 export default function App() {
   return (
@@ -8,12 +8,7 @@ export default function App() {
       style={{ borderWidth: 1, borderColor: "black", height: "100vh" }}
     >
       <View style={styles.container}>
-        <CurrencyInput
-          onChange={(e) => {
-            console.log(e);
-          }}
-          initialValue={123.5}
-        />
+        <DecimalInput/>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -25,5 +20,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 5
   },
 });

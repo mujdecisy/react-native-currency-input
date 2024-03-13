@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node dev-package-loader.js & expo start",
     "android": "expo start --android",
-    "ios": "expo start --ios"
+    "ios": "expo start --ios",
+    "kill": "kill $(ps aux | grep dev-package-loader | grep -v grep | head -n 1 | awk '{print $2}')"
   },
   "dependencies": {
     "expo": "~50.0.11",

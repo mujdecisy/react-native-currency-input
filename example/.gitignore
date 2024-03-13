@@ -35,4 +35,4 @@ yarn-error.*
 *.tsbuildinfo
 
 
-react-native-decimal-input
+lib/

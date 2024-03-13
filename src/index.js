@@ -1,3 +1,3 @@
-import CurrencyInput from './CurrencyInput';
+import DecimalInput from './DecimalInput';
 
-export default CurrencyInput;
+export default DecimalInput;

@@ -3,7 +3,7 @@ const { exec } = require("child_process");
 
 function copyPackageSource(path) {
     console.log(`Change is appeared at ${path}`)
-    const command = "rm -rf react-native-decimal-input && cp -r ../src react-native-decimal-input"
+    const command = "rm -rf lib && mkdir lib && cp -r ../src lib/src && cp ../package.json lib/package.json"
     exec(command, (error, stdout, stderr) => {
         if (error) {
             console.log(`Error: ${error.message}`);

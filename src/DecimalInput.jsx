@@ -1,8 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native";
+import {
+  clearNumber,
+  removeLeadingZeros,
+  addDots,
+  checkIfIntegerSeperatorDeleted,
+  controlSeperators,
+  styles,
+} from "./decimalInputUtility";
 import PropTypes from "prop-types";
+import pkg from "../package.json";
 
-function CurrencyInput({ onChange, initialValue }) {
+function DecimalInput(props) {
   const [integerPart, setIntegerPart] = useState("");
   const [decimalPart, setDecimalPart] = useState("");
   const [cursorAtStartOfDecimal, setCursorAtStartOfDecimal] = useState(false);
@@ -10,49 +19,70 @@ function CurrencyInput({ onChange, initialValue }) {
   const decimalRef = useRef(null);
 
   useEffect(() => {
-    if (initialValue) {
-      const initIntegerPart = Math.floor(initialValue);
-      const initDecimalPart = Math.floor(
-        (initialValue - initIntegerPart) * 100
+    if (props.initialValue !== undefined) {
+      let initIntegerPart = Math.floor(props.initialValue);
+      initIntegerPart = addDots(initIntegerPart.toString());
+
+      let initDecimalPart = Math.floor(
+        (props.initialValue - initIntegerPart) * 100
       );
-      setIntegerPart(addDots(initIntegerPart.toString()));
-      setDecimalPart(initDecimalPart.toString().padEnd(2, "0"));
+      initDecimalPart = initDecimalPart.toString().padEnd(2, "0");
+
+      setIntegerPart(initIntegerPart);
+      setDecimalPart(initDecimalPart);
     }
+
+    controlSeperators(props.seperatorInteger, props.seperatorDecimal);
   }, []);
 
   useEffect(() => {
     let value =
-      integerPart === "" ? 0 : Number.parseInt(clearNumber(integerPart));
+      integerPart === ""
+        ? 0
+        : Number.parseInt(
+            clearNumber(integerPart),
+            props.seperatorDecimal,
+            props.seperatorInteger
+          );
     value +=
       decimalPart === ""
         ? 0
         : Number.parseInt(decimalPart.padEnd(2, "0")) / 100;
-    onChange(value);
+    props.onChange(value);
   }, [integerPart, decimalPart]);
 
   return (
-    <View
-      style={{ display: "flex", flexDirection: "row", paddingHorizontal: 5 }}
-    >
+    <View style={styles.containerStyle}>
       {/* ----------------------------------------------------- INTEGER PART */}
       <TextInput
         ref={integerRef}
-        style={{
-          flex: 1,
-          borderColor: "black",
-          borderWidth: 1,
-          textAlign: "right",
-        }}
+        style={styles.integerTextInputStyle}
         value={integerPart}
         onChangeText={(e) => {
+          // keep comma hardcoded for jumping decimal point
           if (e.includes(",")) {
             if (integerPart === "") {
               setIntegerPart("0");
             }
             decimalRef.current.focus();
           } else {
-            const checkedE = checkIfIntegerSeperatorDeleted(e, integerPart);
-            setIntegerPart(addDots(removeLeadingZeros(clearNumber(checkedE))));
+            const checkedE = checkIfIntegerSeperatorDeleted(
+              e,
+              integerPart,
+              props.seperatorInteger
+            );
+            setIntegerPart(
+              addDots(
+                removeLeadingZeros(
+                  clearNumber(
+                    checkedE,
+                    props.seperatorDecimal,
+                    props.seperatorInteger
+                  )
+                ),
+                props.seperatorInteger
+              )
+            );
           }
         }}
         onFocus={() => {
@@ -68,12 +98,12 @@ function CurrencyInput({ onChange, initialValue }) {
         keyboardType="numeric"
       />
 
-      <Text style={{ marginHorizontal: 5 }}>,</Text>
+      <Text style={styles.seperatorTextStyle}>{props.seperatorDecimal}</Text>
 
       {/* ----------------------------------------------------- DECIMAL PART */}
       <TextInput
         ref={decimalRef}
-        style={{ width: 50, borderColor: "red", borderWidth: 1 }}
+        style={styles.decimalTextInputStyle}
         keyboardType="numeric"
         value={decimalPart}
         onSelectionChange={(e) => {
@@ -88,7 +118,11 @@ function CurrencyInput({ onChange, initialValue }) {
           }
         }}
         onChangeText={(e) => {
-          const value = clearNumber(e);
+          const value = clearNumber(
+            e,
+            props.seperatorDecimal,
+            props.seperatorInteger
+          );
           if (value.length > 2) {
             return;
           }
@@ -111,51 +145,20 @@ function CurrencyInput({ onChange, initialValue }) {
   );
 }
 
-CurrencyInput.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  initialValue: PropTypes.number.isRequired,
+DecimalInput.propTypes = {
+  onChange: PropTypes.func,
+  initialValue: PropTypes.number,
+  seperatorInteger: PropTypes.string,
+  seperatorDecimal: PropTypes.string,
 };
 
-function clearNumber(dirtyNumericString) {
-  return dirtyNumericString.replaceAll(",", "").replaceAll(".", "");
-}
+DecimalInput.defaultProps = {
+  onChange: (val) => {
+    console.log(`${pkg.name} changed : ${val}`);
+  },
+  initialValue: 0,
+  seperatorInteger: ".",
+  seperatorDecimal: ",",
+};
 
-function removeLeadingZeros(numericString) {
-  while (numericString.length > 0 && numericString[0] === "0") {
-    numericString = numericString.slice(1, numericString.length - 1);
-  }
-  return numericString;
-}
-
-function addDots(numericString) {
-  const result = [];
-  for (let i = numericString.length - 1, count = 0; i >= 0; i--) {
-    result.unshift(numericString[i]);
-    count++;
-    if (count % 3 === 0 && i !== 0) {
-      result.unshift(".");
-    }
-  }
-  return result.join("");
-}
-
-function checkIfIntegerSeperatorDeleted(newIntegerPart, integerPart) {
-  resultVal = newIntegerPart;
-  if (newIntegerPart.length < integerPart.length) {
-    let i = newIntegerPart.length - 1;
-    let j = integerPart.length - 1;
-    while (newIntegerPart[i] === integerPart[j]) {
-      i--;
-      j--;
-    }
-
-    if (integerPart[j] === ".") {
-      resultVal =
-        newIntegerPart.slice(0, i) +
-        newIntegerPart.slice(i + 1, newIntegerPart.length);
-    }
-  }
-  return resultVal;
-}
-
-export default CurrencyInput;
+export default DecimalInput;
